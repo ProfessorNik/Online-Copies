@@ -37,8 +37,6 @@ public class ProcessMessageImpl implements ProcessMessage {
     }
 
     private void markMessage(Message message, String senderIp){
-        copiesOfYourselfRepository.ifPresentWithIdOrElse(message.getAppId(),
-                copyOfYourself -> copyOfYourself.addMessageId(message.getMessageId()),
-                () -> copiesOfYourselfRepository.add(new CopyOfYourself(message.getAppId(), senderIp, message.getMessageId())));
+        copiesOfYourselfRepository.addIfPresentOrCreate(message.getAppId(), message, senderIp);
     }
 }

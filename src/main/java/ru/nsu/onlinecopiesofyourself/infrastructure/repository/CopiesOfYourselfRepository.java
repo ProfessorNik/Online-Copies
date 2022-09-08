@@ -1,6 +1,7 @@
 package ru.nsu.onlinecopiesofyourself.infrastructure.repository;
 
 import ru.nsu.onlinecopiesofyourself.domain.entity.CopyOfYourself;
+import ru.nsu.onlinecopiesofyourself.domain.value.Message;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -31,6 +32,11 @@ public class CopiesOfYourselfRepository {
 
     public synchronized void ifPresentWithIdOrElse(UUID id, Consumer<CopyOfYourself> consumer, Runnable runnable) {
         findById(id).ifPresentOrElse(consumer, runnable);
+    }
+
+    public synchronized void addIfPresentOrCreate(UUID id, Message message, String senderIp){
+        findById(id).ifPresentOrElse(copyOfYourself -> copyOfYourself.addMessageId(message.getMessageId()),
+                () -> add(new CopyOfYourself(message.getAppId(), senderIp, message.getMessageId())));
     }
 
     public synchronized int size(){
