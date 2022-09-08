@@ -1,19 +1,21 @@
 package ru.nsu.onlinecopiesofyourself.application.model;
 
+import ru.nsu.onlinecopiesofyourself.domain.value.Message;
+
 public class MessageInfo {
-    private String content;
+    private Message content;
     private String senderId;
 
-    public MessageInfo(String content, String senderId){
+    public MessageInfo(Message content, String senderId){
         this.content = content;
         this.senderId = senderId;
     }
 
-    public String getContent() {
+    public Message getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Message content) {
         this.content = content;
     }
 

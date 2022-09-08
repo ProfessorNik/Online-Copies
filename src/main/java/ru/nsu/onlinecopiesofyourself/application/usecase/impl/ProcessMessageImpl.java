@@ -5,7 +5,7 @@ import ru.nsu.onlinecopiesofyourself.application.usecase.ProcessMessage;
 import ru.nsu.onlinecopiesofyourself.application.util.Observable;
 import ru.nsu.onlinecopiesofyourself.domain.entity.CopyOfYourself;
 import ru.nsu.onlinecopiesofyourself.domain.exception.InvalidMessageException;
-import ru.nsu.onlinecopiesofyourself.domain.value.JSONMessageParser;
+import ru.nsu.onlinecopiesofyourself.domain.value.Message;
 import ru.nsu.onlinecopiesofyourself.infrastructure.repository.CopiesOfYourselfRepository;
 
 public class ProcessMessageImpl implements ProcessMessage {
@@ -18,28 +18,27 @@ public class ProcessMessageImpl implements ProcessMessage {
     }
 
     @Override
-    public void execute(MessageInfo message) {
-        var messageParser = JSONMessageParser.from(message.getContent());
-
+    public void execute(MessageInfo messageInfo) {
+        var message = messageInfo.getContent();
         int oldSize = copiesOfYourselfRepository.size();
 
-        checkPhrase(messageParser);
-        markMessage(messageParser, message.getSenderId());
+        checkPhrase(message);
+        markMessage(message, messageInfo.getSenderId());
 
         if(oldSize != copiesOfYourselfRepository.size()) {
             observableView.notifyListeners();
         }
     }
 
-    private void checkPhrase(JSONMessageParser messageParser){
-        if(!messageParser.getPhrase().equals(messageParser.getPhrase())){
-            throw new InvalidMessageException("Invalid message phrase exception");
+    private void checkPhrase(Message message){
+        if(!"Hello!".equals(message.getPhrase())){
+            throw new InvalidMessageException("Invalid phrase in message: " + message.getPhrase());
         }
     }
 
-    private void markMessage(JSONMessageParser messageParser, String senderIp){
-        copiesOfYourselfRepository.ifPresentWithIdOrElse(messageParser.getAppId(),
-                copyOfYourself -> copyOfYourself.addMessageId(messageParser.getMessageId()),
-                () -> copiesOfYourselfRepository.add(new CopyOfYourself(messageParser.getAppId(), senderIp, messageParser.getMessageId())));
+    private void markMessage(Message message, String senderIp){
+        copiesOfYourselfRepository.ifPresentWithIdOrElse(message.getAppId(),
+                copyOfYourself -> copyOfYourself.addMessageId(message.getMessageId()),
+                () -> copiesOfYourselfRepository.add(new CopyOfYourself(message.getAppId(), senderIp, message.getMessageId())));
     }
 }

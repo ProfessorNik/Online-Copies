@@ -19,7 +19,7 @@ public class CleanExpiredOnlineCopiesImpl implements CleanExpiredOnlineCopies {
     @Override
     public void execute() {
         int oldSize = repository.size();
-        repository.deleteByExpiredTime(new Date(AppProperties.getInit().getTimeExpiredMilliseconds()));
+        repository.deleteByExpiredTime(AppProperties.getInit().getTimeExpiredMilliseconds());
 
         if(oldSize != repository.size()) {
             observableView.notifyListeners();

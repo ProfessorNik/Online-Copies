@@ -1,21 +1,29 @@
 package ru.nsu.onlinecopiesofyourself.application.usecase.impl;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.nsu.onlinecopiesofyourself.application.usecase.GenerateMessage;
-import ru.nsu.onlinecopiesofyourself.domain.entity.CopyOfYourself;
-import ru.nsu.onlinecopiesofyourself.domain.value.MessageGenerator;
+import ru.nsu.onlinecopiesofyourself.domain.exception.InvalidMessageException;
+import ru.nsu.onlinecopiesofyourself.domain.value.Message;
 
-import java.util.List;
+import java.util.UUID;
 
 public class GenerateMessageImpl implements GenerateMessage {
-    private final MessageGenerator messageGenerator;
+    public static final String phrase = "Hello!";
+    public static final UUID appId = UUID.randomUUID();
+
+    private final ObjectMapper mapper;
 
     public GenerateMessageImpl() {
-        messageGenerator = new MessageGenerator();
+        mapper = new ObjectMapper();
     }
 
     @Override
     public String execute() {
-        return messageGenerator.generateMessage();
+        try {
+            return mapper.writeValueAsString(Message.fromUUIDs(phrase, appId, UUID.randomUUID()));
+        } catch (JsonProcessingException e){
+            throw new InvalidMessageException("message was generated incorrectly", e);
+        }
     }
 }

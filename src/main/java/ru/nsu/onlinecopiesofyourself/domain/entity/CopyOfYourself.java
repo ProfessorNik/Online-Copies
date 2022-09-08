@@ -11,13 +11,13 @@ public class CopyOfYourself {
     private final UUID id;
     private final String ip;
     private final List<UUID> prevMessageIds;
-    private Date lastMessageTime;
+    private long lastMessageTime;
 
     public CopyOfYourself(UUID id, String ip, UUID messageId) {
         this.id = id;
         this.ip = ip;
         this.prevMessageIds = new ArrayList<>();
-        lastMessageTime = new Date();
+        lastMessageTime = System.currentTimeMillis();
         prevMessageIds.add(messageId);
     }
 
@@ -26,15 +26,11 @@ public class CopyOfYourself {
             throw new InvalidMessageException("that UUID \"" + messageID + "\" already was");
         }
         prevMessageIds.add(messageID);
-        lastMessageTime = new Date();
+        lastMessageTime = System.currentTimeMillis();
     }
 
-    public boolean hasTimeExpired(Date expirationTime){
-        return new Date().getTime() - lastMessageTime.getTime() >= expirationTime.getTime();
-    }
-
-    public Date getLastMessageTime(){
-        return lastMessageTime;
+    public boolean hasTimeExpired(long expirationTime){
+        return System.currentTimeMillis() - lastMessageTime >= expirationTime;
     }
 
     public UUID getId(){

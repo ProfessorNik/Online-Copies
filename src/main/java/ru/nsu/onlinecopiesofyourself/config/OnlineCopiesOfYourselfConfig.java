@@ -29,7 +29,11 @@ public class OnlineCopiesOfYourselfConfig {
     private final Transceiver transceiver;
     private final AppView appView;
 
-    public OnlineCopiesOfYourselfConfig(){
+    public OnlineCopiesOfYourselfConfig(String[] args){
+        if(args.length != 1) {
+            throw new IllegalArgumentException("wrong count of args, set ip to cli args");
+        }
+
         var observableView = new Observable();
         var repository = new CopiesOfYourselfRepository();
         var getOnlineInfo = new GetOnlineInfoImpl(repository);
@@ -41,7 +45,7 @@ public class OnlineCopiesOfYourselfConfig {
         var cleanExpiredOnlineCopies = new CleanExpiredOnlineCopiesImpl(repository, observableView);
         var messageForwardingController = new MessageForwardingController(generateMessage, processMessage);
         var cleanOnlineCopiesController = new CleanOnlineCopiesController(cleanExpiredOnlineCopies);
-        transceiver = new Transceiver();
+        transceiver = new Transceiver(args[0]);
         var receiver = new Receiver(transceiver, messageForwardingController);
         cleaner = new Cleaner(cleanOnlineCopiesController);
         sender = new Sender(transceiver, messageForwardingController);

@@ -36,9 +36,11 @@ public class AppView extends JFrame implements Observer {
     }
 
     public void update(){
-        OnlineInfo onlineInfo = controller.getInfo();
-        String text = String.join("\n", onlineInfo.getIps());
-        online.setText("Online: " + onlineInfo.getOnline() + "\n" + text);
+        SwingUtilities.invokeLater(()->{
+            OnlineInfo onlineInfo = controller.getInfo();
+            String text = String.join("\n", onlineInfo.getIps());
+            online.setText("Online: " + onlineInfo.getOnline() + "\n" + text);
+        });
     }
 
 }

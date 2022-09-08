@@ -5,8 +5,8 @@ import ru.nsu.onlinecopiesofyourself.infrastructure.controller.MessageForwarding
 import ru.nsu.onlinecopiesofyourself.infrastructure.network.Transceiver;
 
 public class Receiver implements Runnable{
-    public final Transceiver transceiver;
-    public final MessageForwardingController controller;
+    private final Transceiver transceiver;
+    private final MessageForwardingController controller;
 
     public Receiver(Transceiver transceiver, MessageForwardingController controller) {
         this.transceiver = transceiver;

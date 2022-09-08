@@ -1,7 +1,7 @@
 package ru.nsu.onlinecopiesofyourself.infrastructure.network;
 
-import ru.nsu.onlinecopiesofyourself.application.model.MessageInfo;
 import ru.nsu.onlinecopiesofyourself.config.AppProperties;
+import ru.nsu.onlinecopiesofyourself.infrastructure.dto.MessageDto;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -9,20 +9,15 @@ import java.net.*;
 
 public class Transceiver {
     private final MulticastSocket multicastSocket;
-    private final String hostname;
-
-    private final int port;
     private final int bufferSize;
-
     private final NetworkInterface networkInterface;
     private final SocketAddress socketAddress;
 
 
-    public Transceiver(){
+    public Transceiver(String hostname){
         try{
             var appProperties = AppProperties.getInit();
-            hostname = appProperties.getHostname();
-            port = appProperties.getPort();
+            var port = appProperties.getPort();
             bufferSize = appProperties.getBufferSize();
             multicastSocket = new MulticastSocket(port);
             networkInterface = multicastSocket.getNetworkInterface();
@@ -33,9 +28,9 @@ public class Transceiver {
         }
     }
 
-    public MessageInfo receiveMassage(){
+    public MessageDto receiveMassage(){
         DatagramPacket packet = receivePacket();
-        return new MessageInfo(new String(packet.getData(), packet.getOffset(),packet.getLength()),
+        return new MessageDto(new String(packet.getData(), packet.getOffset(),packet.getLength()),
                 packet.getAddress().toString());
     }
 

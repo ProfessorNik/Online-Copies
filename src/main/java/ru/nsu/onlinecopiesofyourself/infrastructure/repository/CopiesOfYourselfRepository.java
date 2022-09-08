@@ -37,7 +37,7 @@ public class CopiesOfYourselfRepository {
         return copiesOfYourself.size();
     }
 
-    public synchronized void deleteByExpiredTime(Date expirationTime){
+    public synchronized void deleteByExpiredTime(long expirationTime){
         copiesOfYourself.removeIf(word -> word.hasTimeExpired(expirationTime));
     }
 }
