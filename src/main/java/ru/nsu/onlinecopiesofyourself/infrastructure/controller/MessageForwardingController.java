@@ -24,7 +24,7 @@ public class MessageForwardingController {
         return new MessageInfo(mapper.readValue(dto.content(), Message.class), dto.ip());
     }
 
-    public void receiveMessage(MessageDto message) {
+    public void processMessage(MessageDto message) {
         try {
             processMessage.execute(mapFromDto(message));
         } catch (InvalidMessageException | JsonProcessingException e) {
@@ -33,7 +33,7 @@ public class MessageForwardingController {
 
     }
 
-    public String sendMessage() {
+    public String generateMessage() {
         return generateMessage.execute();
     }
 }

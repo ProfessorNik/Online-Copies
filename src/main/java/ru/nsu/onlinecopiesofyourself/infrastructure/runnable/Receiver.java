@@ -17,7 +17,7 @@ public class Receiver implements Runnable{
     public void run() {
         while (true) {
             var message = transceiver.receiveMassage();
-            controller.receiveMessage(message);
+            controller.processMessage(message);
         }
     }
 }

@@ -14,7 +14,7 @@ public class Sender implements Runnable{
 
     @Override
     public void run() {
-        String message = controller.sendMessage();
+        String message = controller.generateMessage();
         transceiver.sendMessage(message);
     }
 }
